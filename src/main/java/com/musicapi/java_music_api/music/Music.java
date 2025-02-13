@@ -39,6 +39,7 @@ public class Music {
         this.danceability = danceability;
     }
 
+    // initialise class
     public Music() {
         this("Coconut", "Manu Dibango", 1996, "Afro-Jazz, Funk",
                 "A groovy Afro-jazz fusion track with rich saxophone melodies and vibrant rhythms.", 105, 250, 80, 65);

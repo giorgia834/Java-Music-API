@@ -9,5 +9,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MusicService {
+    public final MusicRepository musicRepository;
+
+    public MusicService(MusicRepository musicRepository) {
+        this.musicRepository = musicRepository;
+    }
+
+    public List<Music> getAllSongs() {
+        return this.musicRepository.findAll();
+    }
 
 }
