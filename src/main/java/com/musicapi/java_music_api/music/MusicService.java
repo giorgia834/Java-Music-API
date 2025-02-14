@@ -19,4 +19,12 @@ public class MusicService {
         return this.musicRepository.findAll();
     }
 
+    public Music getSong(UUID id) throws NoSuchElementException {
+        try {
+            return this.musicRepository.findById(id).orElseThrow();
+        } catch (NoSuchElementException nse) {
+            throw nse;
+        }
+    }
+
 }
