@@ -5,10 +5,15 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -37,10 +42,26 @@ public class MusicController {
         }
     }
 
+    @PostMapping
+    public ResponseEntity<Music> createSong(@RequestBody Music music) {
+        try {
+            return new ResponseEntity<Music>(this.musicService.createSong(music), HttpStatusCode.valueOf(201));
+        } catch (IllegalArgumentException iae) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid data included", iae);
+        }
+    }
+
     // exception to handle incorrect indentity format
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<String> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
         String error = "The format of the IDENTIFIER you entered is not valid.";
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    // exception to handle incorrect post data format
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<String> handleException(HttpMessageNotReadableException noe) {
+        String error = "The format of your input data in the POST request is incorrect";
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 

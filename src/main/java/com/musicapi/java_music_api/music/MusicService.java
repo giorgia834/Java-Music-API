@@ -27,4 +27,9 @@ public class MusicService {
         }
     }
 
+    public Music createSong(Music music) throws IllegalArgumentException, OptimisticLockingFailureException {
+        this.musicRepository.save(music);
+        return music;
+    }
+
 }

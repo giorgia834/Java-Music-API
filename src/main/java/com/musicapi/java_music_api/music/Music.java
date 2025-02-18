@@ -2,6 +2,7 @@ package com.musicapi.java_music_api.music;
 
 import java.util.UUID;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,8 +21,8 @@ public class Music {
     private Integer year;
     private String genre;
     private String description;
-    private Integer bpm;
     private Integer duration_sec;
+    private Integer bpm;
     private Integer energy;
     private Integer danceability;
 
