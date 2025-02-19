@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,9 +46,27 @@ public class MusicController {
     @PostMapping
     public ResponseEntity<Music> createSong(@RequestBody Music music) {
         try {
-            return new ResponseEntity<Music>(this.musicService.createSong(music), HttpStatusCode.valueOf(201));
+            return new ResponseEntity<Music>(musicService.createSong(music), HttpStatusCode.valueOf(201));
         } catch (IllegalArgumentException iae) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid data included", iae);
+        }
+    }
+
+    @PutMapping("/{id}")
+    public Music updateSong(@PathVariable UUID id, @RequestBody Music music) {
+        try {
+            return this.musicService.updateSong(id, music);
+        } catch (NoSuchElementException nse) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteSong(@PathVariable UUID id) {
+        try {
+            this.musicService.deleteSong(id);
+        } catch (NoSuchElementException nse) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
 

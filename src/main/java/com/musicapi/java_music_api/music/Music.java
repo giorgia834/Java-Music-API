@@ -21,6 +21,7 @@ public class Music {
     private Integer year;
     private String genre;
     private String description;
+    @Column(name = "duration_sec")
     private Integer duration_sec;
     private Integer bpm;
     private Integer energy;
@@ -54,72 +55,72 @@ public class Music {
         return this.song;
     }
 
-    public String setSong(String song) {
-        return this.song = song;
+    public void setSong(String song) {
+        this.song = song;
     }
 
     public String getArtist() {
         return this.artist;
     }
 
-    public String setArtist(String artist) {
-        return this.artist = artist;
+    public void setArtist(String artist) {
+        this.artist = artist;
     }
 
     public Integer getYear() {
         return this.year;
     }
 
-    public Integer setYear(Integer year) {
-        return this.year = year;
+    public void setYear(Integer year) {
+        this.year = year;
     }
 
     public String getGenre() {
         return this.genre;
     }
 
-    public String setGenre(String genre) {
-        return this.genre = genre;
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
 
     public String getDescription() {
         return this.description;
     }
 
-    public String setDescription(String description) {
-        return this.description = description;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public Integer getDuractionSec() {
+    public Integer getDurationSec() {
         return this.duration_sec;
     }
 
-    public Integer setDuractionSec(Integer duration_sec) {
-        return this.duration_sec = duration_sec;
+    public void setDurationSec(Integer duration_sec) {
+        this.duration_sec = duration_sec;
     }
 
     public Integer getBpm() {
         return this.bpm;
     }
 
-    public Integer setBpm(Integer bpm) {
-        return this.bpm = bpm;
+    public void setBpm(Integer bpm) {
+        this.bpm = bpm;
     }
 
     public Integer getEnergy() {
         return this.energy;
     }
 
-    public Integer setEnergy(Integer energy) {
-        return this.energy = energy;
+    public void setEnergy(Integer energy) {
+        this.energy = energy;
     }
 
     public Integer getDanceability() {
         return this.danceability;
     }
 
-    public Integer setDanceability(Integer danceability) {
-        return this.danceability = danceability;
+    public void setDanceability(Integer danceability) {
+        this.danceability = danceability;
     }
 
 }
