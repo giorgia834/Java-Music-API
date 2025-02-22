@@ -57,4 +57,8 @@ public class MusicService {
         }
     }
 
+    public List<Music> getHighDanceabilitySongs() {
+        return this.musicRepository.findByHighDanceability();
+    }
+
 }

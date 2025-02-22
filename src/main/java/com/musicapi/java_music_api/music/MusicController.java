@@ -84,4 +84,9 @@ public class MusicController {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
+    @GetMapping("/highdanceability")
+    public List<Music> getHighValueIOUS() {
+        return this.musicService.getHighDanceabilitySongs();
+    }
+
 }
