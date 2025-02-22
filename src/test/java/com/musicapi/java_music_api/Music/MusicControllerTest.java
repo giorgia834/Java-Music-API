@@ -83,4 +83,33 @@ public class MusicControllerTest {
         when(musicService.getAllSongs()).thenReturn(defaultSongs);
     }
 
+    @Test
+    @Description("POST /music creates new Song")
+    void createSong() {
+        // Arrange
+        Music music = createNewSong();
+
+        when(musicService.createSong(any(Music.class))).thenAnswer(invocation -> setId(invocation.getArgument(0)));
+
+        // Act
+        ResponseEntity<Music> response = restTemplate.postForEntity(baseURI.toString(), music, Music.class);
+
+        // Assert
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertNotNull(response.getBody().getId());
+        verify(musicService).createSong(any(Music.class));
+    }
+
+    private Music createNewSong() {
+        return setId(new Music("Sweet Dreams", "Beyoncé", 2009, "Pop, R&B",
+                "A sultry, hypnotic cover of the classic Eurythmics song, with Beyoncé's powerful vocals.", 240,
+                120, 85, 75));
+    }
+
+    private static Music setId(Music music) {
+        ReflectionTestUtils.setField(music, "id", UUID.randomUUID());
+        return music;
+    }
+
 }
