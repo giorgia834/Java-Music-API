@@ -19,6 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.musicapi.java_music_api.JavaMusicApiApplication;
 import com.musicapi.java_music_api.music.Music;
+import com.musicapi.java_music_api.music.MusicService;
 
 import java.math.BigDecimal;
 import java.net.URI;
@@ -65,5 +66,21 @@ public class MusicControllerTest {
                     130, 85, 70));
         }
     };
+
+    @MockBean
+    private MusicService musicService;
+
+    @BeforeEach
+    void setUp() throws RuntimeException {
+        this.baseURI = UriComponentsBuilder.newInstance()
+                .scheme("http")
+                .host("localhost")
+                .port(port)
+                .path("music")
+                .build()
+                .toUri();
+
+        when(musicService.getAllSongs()).thenReturn(defaultSongs);
+    }
 
 }
