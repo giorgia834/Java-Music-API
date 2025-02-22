@@ -70,6 +70,16 @@ public class MusicController {
         }
     }
 
+    @GetMapping("/highdanceability")
+    public List<Music> getHighEnergySongs() {
+        return this.musicService.getHighDanceabilitySongs();
+    }
+
+    @GetMapping("/lowenergy")
+    public List<Music> getLowEnergySongs() {
+        return this.musicService.getLowEnergySongs();
+    }
+
     // exception to handle incorrect indentity format
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<String> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
@@ -82,11 +92,6 @@ public class MusicController {
     public ResponseEntity<String> handleException(HttpMessageNotReadableException noe) {
         String error = "The format of your input data in the POST request is incorrect";
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-    }
-
-    @GetMapping("/highdanceability")
-    public List<Music> getHighValueIOUS() {
-        return this.musicService.getHighDanceabilitySongs();
     }
 
 }

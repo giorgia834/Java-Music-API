@@ -61,4 +61,8 @@ public class MusicService {
         return this.musicRepository.findByHighDanceability();
     }
 
+    public List<Music> getLowEnergySongs() {
+        return this.musicRepository.findByLowEnergy();
+    }
+
 }

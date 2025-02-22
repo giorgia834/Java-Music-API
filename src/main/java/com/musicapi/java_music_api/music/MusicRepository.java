@@ -10,4 +10,7 @@ public interface MusicRepository extends ListCrudRepository<Music, UUID> {
     // Get high energy music
     @Query(value = "SELECT * FROM music ORDER BY danceability DESC LIMIT 15", nativeQuery = true)
     List<Music> findByHighDanceability();
+
+    @Query(value = "SELECT * FROM music ORDER BY energy ASC LIMIT 15", nativeQuery = true)
+    List<Music> findByLowEnergy();
 }
