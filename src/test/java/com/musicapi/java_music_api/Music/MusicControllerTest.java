@@ -56,9 +56,9 @@ public class MusicControllerTest {
 
     private List<Music> defaultSongs = new ArrayList<>() {
         {
-            add(new Music("Sweet Dreams", "Beyoncé", 2009, "Pop, R&B",
-                    "A sultry, hypnotic cover of the classic Eurythmics song, with Beyoncé's powerful vocals.", 240,
-                    120, 85, 75));
+            add(new Music("Sweet Dreams", "Beyoncé", 2008, "Pop, R&B",
+                    "A pop-R&B track with catchy synths and Beyoncé's powerful vocals, exploring themes of love and longing.",
+                    230, 120, 85, 90));
             add(new Music("Nothing New", "Charlotte Day Wilson", 2021, "R&B, Soul",
                     "A reflective, soulful track with emotional lyrics and smooth instrumentation.", 210, 85, 60, 70));
             add(new Music("Wuthering Heights", "Kate Bush", 1978, "Art Rock",
@@ -101,10 +101,31 @@ public class MusicControllerTest {
         verify(musicService).createSong(any(Music.class));
     }
 
+    @Test
+    @Description("GET /music returns all songs")
+    void getAllSongs() throws URISyntaxException {
+        // Act: sending the http get request and receives a response
+        ResponseEntity<List<Music>> response = restTemplate.exchange(baseURI, HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<Music>>() {
+                });
+        List<Music> responseSongs = response.getBody();
+
+        // Assert
+        // checks that the status code is 200
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        // checks that the response is not null
+        assertNotNull(responseSongs);
+        // checks that the size of the defaultSongs matches the responseSongs size
+        assertEquals(defaultSongs.size(), responseSongs.size());
+        // checks that the getAllSongs was implemented
+        verify(musicService).getAllSongs();
+
+    }
+
     private Music createNewSong() {
-        return setId(new Music("Sweet Dreams", "Beyoncé", 2009, "Pop, R&B",
-                "A sultry, hypnotic cover of the classic Eurythmics song, with Beyoncé's powerful vocals.", 240,
-                120, 85, 75));
+        return setId(new Music("Sweet Dreams", "Beyoncé", 2008, "Pop, R&B",
+                "A pop-R&B track with catchy synths and Beyoncé's powerful vocals, exploring themes of love and longing.",
+                230, 120, 85, 90));
     }
 
     private static Music setId(Music music) {
