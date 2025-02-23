@@ -122,6 +122,32 @@ public class MusicControllerTest {
 
     }
 
+    @Test
+    @Description("GET /music/{id} returns id associated song")
+    void getSong() {
+        // Arrange
+        // selects random default song
+        Music music = selectRandomSong();
+        // adds getSong route to the base URL
+        URI endpoint = getEndpoint(music);
+        // imitate database behaviour, retuns song
+        when(musicService.getSong(any(UUID.class))).thenReturn(music);
+
+        // Act
+        // sends GET request to getSong route and stores response
+        ResponseEntity<Music> response = restTemplate.getForEntity(endpoint, Music.class);
+
+        // Assert
+        // checks that the status code is 200
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        // checks that the response is not null
+        assertNotNull(response.getBody());
+        // checks that the response id matches the Music instance id
+        assertEquals(music.getId(), response.getBody().getId());
+        // checks that getSong was implemented
+        verify(musicService).getSong(music.getId());
+    }
+
     private Music createNewSong() {
         return setId(new Music("Sweet Dreams", "Beyoncé", 2008, "Pop, R&B",
                 "A pop-R&B track with catchy synths and Beyoncé's powerful vocals, exploring themes of love and longing.",
@@ -129,8 +155,26 @@ public class MusicControllerTest {
     }
 
     private static Music setId(Music music) {
+        // creates random UUID
         ReflectionTestUtils.setField(music, "id", UUID.randomUUID());
         return music;
+    }
+
+    private Music selectRandomSong() {
+        // allocate random id to randomly chosen default song
+        int randomIndex = new Random().nextInt(defaultSongs.size());
+
+        return setId(defaultSongs.get(randomIndex));
+    }
+
+    private URI getEndpoint(Music music) {
+        // creates endpoint with song id
+        return appendPath(baseURI, music.getId().toString());
+    }
+
+    private URI appendPath(URI uri, String path) {
+        // append end point to the base URI
+        return UriComponentsBuilder.fromUri(uri).pathSegment(path).build().encode().toUri();
     }
 
 }
