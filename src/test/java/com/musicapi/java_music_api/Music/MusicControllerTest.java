@@ -130,7 +130,7 @@ public class MusicControllerTest {
         Music music = selectRandomSong();
         // adds getSong route to the base URL
         URI endpoint = getEndpoint(music);
-        // imitate database behaviour, retuns song
+        // imitates database behaviour, retuns song
         when(musicService.getSong(any(UUID.class))).thenReturn(music);
 
         // Act
@@ -144,6 +144,27 @@ public class MusicControllerTest {
         assertNotNull(response.getBody());
         // checks that the response id matches the Music instance id
         assertEquals(music.getId(), response.getBody().getId());
+        // checks that getSong was implemented
+        verify(musicService).getSong(music.getId());
+    }
+
+    @Test
+    @Description("GET /music/{id} returns 404 for invalid Song")
+    void getInvalidSong() {
+        // Arrange
+        Music music = createNewSong();
+        URI endpoint = getEndpoint(music);
+
+        // imitates database behaviour when song is not found, NoSuchElementException is
+        // thrown
+        when(musicService.getSong(any(UUID.class))).thenThrow(NoSuchElementException.class);
+
+        // Act
+        ResponseEntity<Music> response = restTemplate.getForEntity(endpoint, Music.class);
+
+        // Assert
+        // checks that the status code is 404
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         // checks that getSong was implemented
         verify(musicService).getSong(music.getId());
     }
