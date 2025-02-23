@@ -157,7 +157,7 @@ public class MusicControllerTest {
 
         // imitates database behaviour when song is not found, NoSuchElementException is
         // thrown
-        when(musicService.getSong(any(UUID.class))).thenThrow(NoSuchElementException.class);
+        when(musicService.getSong(any(UUID.class))).thenThrow(new NoSuchElementException("Song not found"));
 
         // Act
         ResponseEntity<Music> response = restTemplate.getForEntity(endpoint, Music.class);
@@ -167,6 +167,64 @@ public class MusicControllerTest {
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         // checks that getSong was implemented
         verify(musicService).getSong(music.getId());
+    }
+
+    @Test
+    @Description("PUT /music/{id} updates selected song")
+    void updateSong() {
+        // Arrange
+        Music music = selectRandomSong();
+        URI endpoint = getEndpoint(music);
+
+        // imitates database behaviour when song is updated by returning a song when
+        // getSong and updateSong are called
+        when(musicService.getSong(any(UUID.class))).thenReturn(music);
+        when(musicService.updateSong(any(UUID.class), any(Music.class))).thenReturn(music);
+
+        // Act
+        // updates song name
+        music.setSong("UpdatedSong");
+        // sends PUT request with updated music object
+        restTemplate.put(endpoint, music);
+
+        // sends get request to obtain updated music object
+        ResponseEntity<Music> response = restTemplate.getForEntity(endpoint, Music.class);
+        Music updatedSong = response.getBody();
+
+        // Assert
+        // checks that the status code is 200
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        // checks that the response id matches the Music instance id
+        assertEquals(music.getId(), updatedSong.getId());
+        // checks that the song parameter is updatedSong
+        assertEquals("UpdatedSong", updatedSong.getSong());
+        // checks that getSong was implemented
+        verify(musicService).getSong(music.getId());
+        // checks that updateSong was implemented
+        verify(musicService).updateSong(any(UUID.class), any(Music.class));
+    }
+
+    @Test
+    @Description("PUT /music/{id} returns 404 for invalid Song")
+    void updateInvalidSong() {
+        // Arrange
+        Music music = createNewSong();
+        URI endpoint = getEndpoint(music);
+        // imitates database behaviour when song to be updated is not found,
+        // NoSuchElementException thrown
+        when(musicService.updateSong(any(UUID.class), any(Music.class)))
+                .thenThrow(NoSuchElementException.class);
+
+        // Act
+        // sends PUT request with music object as body
+        RequestEntity<Music> request = RequestEntity.put(endpoint).accept(MediaType.APPLICATION_JSON).body(music);
+        ResponseEntity<Music> response = restTemplate.exchange(request, Music.class);
+
+        // Assert
+        // checks that the status code is 404
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        // checks that updateSong was implemented
+        verify(musicService).updateSong(any(UUID.class), any(Music.class));
     }
 
     private Music createNewSong() {
