@@ -227,6 +227,65 @@ public class MusicControllerTest {
         verify(musicService).updateSong(any(UUID.class), any(Music.class));
     }
 
+    @Test
+    @Description("DELETE /music/{id} deletes selected song")
+    void deleteSong() {
+        // Arrange
+        Music music = selectRandomSong();
+        URI endpoint = getEndpoint(music);
+        // imitate database obtaining data for song specified by endpoint
+        when(musicService.getSong(any(UUID.class))).thenReturn(music);
+        // send get request to check for song existence
+        ResponseEntity<Music> foundResponse = restTemplate.getForEntity(endpoint, Music.class);
+
+        // imitates deletion by returning null
+        doAnswer(invocation -> {
+            return null;
+        }).when(musicService).deleteSong(any(UUID.class));
+        // throw NoSuchElementException after deleting song
+        when(musicService.getSong(any(UUID.class))).thenThrow(NoSuchElementException.class);
+
+        // Act
+        // delete request at specified endoint
+        RequestEntity<?> request = RequestEntity.delete(endpoint).accept(MediaType.APPLICATION_JSON).build();
+        // storing response to deletion request
+        ResponseEntity<?> deletionResponse = restTemplate.exchange(request, Object.class);
+        // sends GET request to check song deletion
+        ResponseEntity<Music> deletedResponse = restTemplate.getForEntity(endpoint, Music.class);
+
+        // Assert
+        // checks that initial GET request results in status 200
+        assertEquals(HttpStatus.OK, foundResponse.getStatusCode());
+        // check that after deletion the status code is 200 or 204
+        assertTrue(deletionResponse.getStatusCode() == HttpStatus.OK
+                || deletionResponse.getStatusCode() == HttpStatus.NO_CONTENT);
+        assertEquals(HttpStatus.NOT_FOUND, deletedResponse.getStatusCode());
+        // checks that deleteSong was implemented
+        verify(musicService).deleteSong(music.getId());
+    }
+
+    @Test
+    @Description("DELETE /music/{id} returns 404 for invalid song")
+    void deleteInvalidSong() {
+        // Arrange
+        Music music = createNewSong();
+        URI endpoint = getEndpoint(music);
+        // emulate deleting non existent song from database
+        doThrow(NoSuchElementException.class).when(musicService).deleteSong(any(UUID.class));
+
+        // Act
+        // delete request to specified endpoint
+        RequestEntity<?> request = RequestEntity.delete(endpoint).accept(MediaType.APPLICATION_JSON).build();
+        // store deletion request response (404 not found)
+        ResponseEntity<Music> response = restTemplate.exchange(request, Music.class);
+
+        // Assert
+        // check status code is 404
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        // check deleteSong was implemented
+        verify(musicService).deleteSong(music.getId());
+    }
+
     private Music createNewSong() {
         return setId(new Music("Sweet Dreams", "Beyoncé", 2008, "Pop, R&B",
                 "A pop-R&B track with catchy synths and Beyoncé's powerful vocals, exploring themes of love and longing.",
