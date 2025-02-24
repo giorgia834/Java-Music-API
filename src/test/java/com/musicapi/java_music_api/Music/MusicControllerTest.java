@@ -21,13 +21,8 @@ import com.musicapi.java_music_api.JavaMusicApiApplication;
 import com.musicapi.java_music_api.music.Music;
 import com.musicapi.java_music_api.music.MusicService;
 
-import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.Duration;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -286,6 +281,46 @@ public class MusicControllerTest {
         verify(musicService).deleteSong(music.getId());
     }
 
+    @Test
+    @Description("GET /music/highdanceability returns high danceability songs")
+    void getHighDanceabilitySongs() {
+        // Arrange
+
+        // imitates database behaviour, retuns song
+        when(musicService.getHighDanceabilitySongs()).thenReturn(highDanceabilitySongs);
+
+        URI endpoint = getCustomEndpoint("highdanceability");
+
+        // Act
+        // sends GET request to getSong route and stores response
+        ResponseEntity<List<Music>> response = restTemplate.exchange(endpoint, HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<Music>>() {
+                });
+
+        // Assert
+        // checks that the status code is 200
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        // checks that the response is not null
+        assertNotNull(response.getBody());
+        // checks that the response id matches the Music instance id
+        assertEquals(highDanceabilitySongs.size(), response.getBody().size());
+        // checks that getSong was implemented
+        verify(musicService).getHighDanceabilitySongs();
+    }
+
+    private List<Music> highDanceabilitySongs = new ArrayList<>() {
+        {
+            add(new Music("Sweet Dreams", "Beyoncé", 2008, "Pop, R&B",
+                    "A pop-R&B track with catchy synths and Beyoncé's powerful vocals, exploring themes of love and longing.",
+                    230, 120, 85, 90));
+            add(new Music("Nothing New", "Charlotte Day Wilson", 2021, "R&B, Soul",
+                    "A reflective, soulful track with emotional lyrics and smooth instrumentation.", 210, 85, 60, 70));
+            add(new Music("Wuthering Heights", "Kate Bush", 1978, "Art Rock",
+                    "A dramatic and ethereal track with Kate Bush's unique vocals and complex instrumentation.", 240,
+                    130, 85, 70));
+        }
+    };
+
     private Music createNewSong() {
         return setId(new Music("Sweet Dreams", "Beyoncé", 2008, "Pop, R&B",
                 "A pop-R&B track with catchy synths and Beyoncé's powerful vocals, exploring themes of love and longing.",
@@ -303,6 +338,12 @@ public class MusicControllerTest {
         int randomIndex = new Random().nextInt(defaultSongs.size());
 
         return setId(defaultSongs.get(randomIndex));
+    }
+
+    //
+    private URI getCustomEndpoint(String endpoint) {
+        // creates endpoint with song id
+        return appendPath(baseURI, endpoint);
     }
 
     private URI getEndpoint(Music music) {

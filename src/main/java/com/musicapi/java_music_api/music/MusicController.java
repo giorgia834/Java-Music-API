@@ -71,7 +71,7 @@ public class MusicController {
     }
 
     @GetMapping("/highdanceability")
-    public List<Music> getHighEnergySongs() {
+    public List<Music> getHighDanceabilitySongs() {
         return this.musicService.getHighDanceabilitySongs();
     }
 
