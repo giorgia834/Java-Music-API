@@ -17,8 +17,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
+
+import jakarta.persistence.OptimisticLockException;
 
 @RestController
 @RequestMapping("/music")
@@ -92,6 +95,13 @@ public class MusicController {
     public ResponseEntity<String> handleException(HttpMessageNotReadableException noe) {
         String error = "The format of your input data in the POST request is incorrect";
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    // exception to handle data conflict
+    @ExceptionHandler(OptimisticLockException.class)
+    public ResponseEntity<String> handleOptimisticLockException(OptimisticLockException ole) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body("Conflict: Retry, data has been modified by another action.");
     }
 
 }
