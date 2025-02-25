@@ -286,26 +286,51 @@ public class MusicControllerTest {
     void getHighDanceabilitySongs() {
         // Arrange
 
-        // imitates database behaviour, retuns song
+        // imitate database behaviour to return high danceability songs
         when(musicService.getHighDanceabilitySongs()).thenReturn(highDanceabilitySongs);
-
         URI endpoint = getCustomEndpoint("highdanceability");
 
         // Act
-        // sends GET request to getSong route and stores response
+        // send GET request to highdanceability route and stores response
         ResponseEntity<List<Music>> response = restTemplate.exchange(endpoint, HttpMethod.GET, null,
                 new ParameterizedTypeReference<List<Music>>() {
                 });
 
         // Assert
-        // checks that the status code is 200
+        // check that the status code is 200
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        // checks that the response is not null
+        // check that the response is not null
         assertNotNull(response.getBody());
-        // checks that the response id matches the Music instance id
+        // check that the response size matches the highDanceabilitySongs size
         assertEquals(highDanceabilitySongs.size(), response.getBody().size());
-        // checks that getSong was implemented
+        // check that getHighDanceabilitySongs was implemented
         verify(musicService).getHighDanceabilitySongs();
+    }
+
+    @Test
+    @Description("GET /music/lowenergy returns low energy songs")
+    void getLowEnergySongs() {
+        // Arrange
+
+        // imitate database behaviour to return low energy songs
+        when(musicService.getLowEnergySongs()).thenReturn(lowEnergySongs);
+        URI endpoint = getCustomEndpoint("lowenergy");
+
+        // Act
+        // send GET request to lowenergy route and stores response
+        ResponseEntity<List<Music>> response = restTemplate.exchange(endpoint, HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<Music>>() {
+                });
+
+        // Assert
+        // check that the status code is 200
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        // check that the response is not null
+        assertNotNull(response.getBody());
+        // check that the response size matches the lowEnergySongs size
+        assertEquals(lowEnergySongs.size(), response.getBody().size());
+        // check that getLowEnergySongs was implemented
+        verify(musicService).getLowEnergySongs();
     }
 
     private List<Music> highDanceabilitySongs = new ArrayList<>() {
@@ -315,6 +340,19 @@ public class MusicControllerTest {
                     230, 120, 85, 90));
             add(new Music("Nothing New", "Charlotte Day Wilson", 2021, "R&B, Soul",
                     "A reflective, soulful track with emotional lyrics and smooth instrumentation.", 210, 85, 60, 70));
+            add(new Music("Wuthering Heights", "Kate Bush", 1978, "Art Rock",
+                    "A dramatic and ethereal track with Kate Bush's unique vocals and complex instrumentation.", 240,
+                    130, 85, 70));
+        }
+    };
+
+    private List<Music> lowEnergySongs = new ArrayList<>() {
+        {
+            add(new Music("Nothing New", "Charlotte Day Wilson", 2021, "R&B, Soul",
+                    "A reflective, soulful track with emotional lyrics and smooth instrumentation.", 210, 85, 60, 70));
+            add(new Music("Sweet Dreams", "Beyoncé", 2008, "Pop, R&B",
+                    "A pop-R&B track with catchy synths and Beyoncé's powerful vocals, exploring themes of love and longing.",
+                    230, 120, 85, 90));
             add(new Music("Wuthering Heights", "Kate Bush", 1978, "Art Rock",
                     "A dramatic and ethereal track with Kate Bush's unique vocals and complex instrumentation.", 240,
                     130, 85, 70));
