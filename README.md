@@ -170,3 +170,10 @@ The following is the format of a response or the request body required for the P
 ```
 
 **Note:** To avoid errors ensure that durationSec is written in camel case and not in the same format as in the database (duration_sec)
+
+## Future Features
+
+- Create additional enpoints to represent additional moods.
+- Include to the database links to images relating to the songs.
+- Implement a frontend application which allows the user to visualise all songs, delete and update specific songs.
+- Include separate HTML pages which include song reccommendations for different moods e.g happy, calm, sad etc.
