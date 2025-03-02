@@ -2,8 +2,8 @@
 
 ## Description
 
-A simple API to store your favourite songs. This allows you to view all songs, select them by ID, delete them or update them.
-It also includes two additional routes: one that shows the 15 songs with the highest danceability score, and the second one 15 songs with the lowest energy.
+A simple API to store your favourite songs. This application allows the user to view all songs, select them by ID, delete them or update them.
+It also includes two custom routes which retrieve songs specific to the user mood.
 
 ## Configuration
 
@@ -48,7 +48,7 @@ JAVA-MUSIC-API/
 ├── .gitignore
 ├── README.md
 ├── pom.xml
-└── database_dump.sql
+└── database.sql
 
 ```
 
@@ -86,7 +86,7 @@ cd [REPO_NAME]
 1. Within MySQLWorkbench, select open a SQL script file in a new query tab:
    <img src="./assets/mysql_workbench.png" alt="drawing" width="1000"/>
 
-2. Follow this path JAVA-MUSIC-API/dump_file.sql and select the sql file
+2. Follow this path JAVA-MUSIC-API/database.sql and select the sql file
 
 3. You now have access to an existing database
 
@@ -107,7 +107,7 @@ CREATE DATABASE IF NOT EXISTS musicapi;
 exit;
 ```
 
-3. To store data about your songs within the music table in the musicapi database, use the following command:
+3. After you have created a music table, to store data within the table in the musicapi database, use the following command:
 
 ```sh
 INSERT INTO musicapi.music (id, song, artist, year, genre, description, duration_sec, bpm, energy, danceability)
@@ -184,11 +184,11 @@ The following is the format of a response or the request body required for the P
     "artist": "song artist",
     "year": release year,
     "genre": "song genre",
-    "description": "song genre",
+    "description": "song description",
     "bpm": bpm value,
     "energy": energy value,
     "danceability": danceability value,
-    "duractionSec": duractionSec value
+    "duractionSec": duraction in seconds
 }
 
 ```
@@ -198,6 +198,6 @@ The following is the format of a response or the request body required for the P
 ## Future Features
 
 - Create additional enpoints to represent additional moods.
-- Include to the database links to images relating to the songs.
+- Within the database include links to images relating to the songs.
 - Implement a frontend application which allows the user to visualise all songs, delete and update specific songs.
 - Include separate HTML pages which include song reccommendations for different moods e.g happy, calm, sad etc.
