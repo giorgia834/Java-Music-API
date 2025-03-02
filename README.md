@@ -28,6 +28,30 @@ All data is stored in a single table called music.
 
 **Note:** A Universally unique identifier (UUID) is a 128-bit label utilised to identify information.
 
+### Project Structure
+
+```
+
+JAVA-MUSIC-API/
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/
+│   │   │       └── musicapi/
+│   │   │           └── java_music_api/
+│   │   └── resources/
+│   └── test/
+│       └── java/
+│           └── com/
+│               └── musicapi/
+│                   └── java_music_api/
+├── .gitignore
+├── README.md
+├── pom.xml
+└── database_dump.sql
+
+```
+
 ### Project Management
 
 For this project a Kanban board was implemented to organise tasks and visualise progress.
