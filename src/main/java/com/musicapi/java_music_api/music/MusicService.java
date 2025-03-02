@@ -15,10 +15,12 @@ public class MusicService {
         this.musicRepository = musicRepository;
     }
 
+    // get all songs service
     public List<Music> getAllSongs() {
         return this.musicRepository.findAll();
     }
 
+    // get song service
     public Music getSong(UUID id) throws NoSuchElementException {
         try {
             return this.musicRepository.findById(id).orElseThrow();
@@ -27,11 +29,13 @@ public class MusicService {
         }
     }
 
+    // create service
     public Music createSong(Music music) throws IllegalArgumentException, OptimisticLockingFailureException {
         this.musicRepository.save(music);
         return music;
     }
 
+    // update service
     public Music updateSong(UUID id, Music updatedMusic) throws NoSuchElementException {
         Music music = musicRepository.findById(id).orElseThrow();
 
@@ -49,6 +53,7 @@ public class MusicService {
 
     }
 
+    // delete service
     public void deleteSong(UUID id) throws NoSuchElementException {
         if (musicRepository.findById(id).isPresent()) {
             musicRepository.deleteById(id);
@@ -57,10 +62,12 @@ public class MusicService {
         }
     }
 
+    // high danceability service
     public List<Music> getHighDanceabilitySongs() {
         return this.musicRepository.findByHighDanceability();
     }
 
+    // low energy service
     public List<Music> getLowEnergySongs() {
         return this.musicRepository.findByLowEnergy();
     }

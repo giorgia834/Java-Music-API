@@ -81,7 +81,7 @@ public class MusicControllerTest {
     @Test
     @Description("POST /music creates new Song")
     void createSong() {
-        // Arrange
+        // Arrange: sending the http POST request and receive a response
         Music music = createNewSong();
 
         when(musicService.createSong(any(Music.class))).thenAnswer(invocation -> setId(invocation.getArgument(0)));
@@ -90,29 +90,33 @@ public class MusicControllerTest {
         ResponseEntity<Music> response = restTemplate.postForEntity(baseURI.toString(), music, Music.class);
 
         // Assert
+        // checks that the status code is 201
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        // check that the response is not null
         assertNotNull(response.getBody());
+        // check that the response id is not null
         assertNotNull(response.getBody().getId());
+        // check that the createSong was implemented
         verify(musicService).createSong(any(Music.class));
     }
 
     @Test
     @Description("GET /music returns all songs")
     void getAllSongs() throws URISyntaxException {
-        // Act: sending the http get request and receives a response
+        // Act: sending the http get request and receive a response
         ResponseEntity<List<Music>> response = restTemplate.exchange(baseURI, HttpMethod.GET, null,
                 new ParameterizedTypeReference<List<Music>>() {
                 });
         List<Music> responseSongs = response.getBody();
 
         // Assert
-        // checks that the status code is 200
+        // check that the status code is 200
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        // checks that the response is not null
+        // check that the response is not null
         assertNotNull(responseSongs);
-        // checks that the size of the defaultSongs matches the responseSongs size
+        // check that the size of the defaultSongs matches the responseSongs size
         assertEquals(defaultSongs.size(), responseSongs.size());
-        // checks that the getAllSongs was implemented
+        // check that the getAllSongs was implemented
         verify(musicService).getAllSongs();
 
     }
@@ -121,25 +125,25 @@ public class MusicControllerTest {
     @Description("GET /music/{id} returns id associated song")
     void getSong() {
         // Arrange
-        // selects random default song
+        // select random default song
         Music music = selectRandomSong();
-        // adds getSong route to the base URL
+        // add getSong route to the base URL
         URI endpoint = getEndpoint(music);
-        // imitates database behaviour, retuns song
+        // imitate database behaviour, retun song
         when(musicService.getSong(any(UUID.class))).thenReturn(music);
 
         // Act
-        // sends GET request to getSong route and stores response
+        // send GET request to getSong route and stores response
         ResponseEntity<Music> response = restTemplate.getForEntity(endpoint, Music.class);
 
         // Assert
-        // checks that the status code is 200
+        // check that the status code is 200
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        // checks that the response is not null
+        // check that the response is not null
         assertNotNull(response.getBody());
-        // checks that the response id matches the Music instance id
+        // check that the response id matches the Music instance id
         assertEquals(music.getId(), response.getBody().getId());
-        // checks that getSong was implemented
+        // check that getSong was implemented
         verify(musicService).getSong(music.getId());
     }
 
@@ -150,7 +154,7 @@ public class MusicControllerTest {
         Music music = createNewSong();
         URI endpoint = getEndpoint(music);
 
-        // imitates database behaviour when song is not found, NoSuchElementException is
+        // imitate database behaviour when song is not found, NoSuchElementException is
         // thrown
         when(musicService.getSong(any(UUID.class))).thenThrow(new NoSuchElementException("Song not found"));
 
@@ -158,9 +162,9 @@ public class MusicControllerTest {
         ResponseEntity<Music> response = restTemplate.getForEntity(endpoint, Music.class);
 
         // Assert
-        // checks that the status code is 404
+        // check that the status code is 404
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        // checks that getSong was implemented
+        // check that getSong was implemented
         verify(musicService).getSong(music.getId());
     }
 
@@ -171,15 +175,15 @@ public class MusicControllerTest {
         Music music = selectRandomSong();
         URI endpoint = getEndpoint(music);
 
-        // imitates database behaviour when song is updated by returning a song when
+        // imitate database behaviour when song is updated by returning a song when
         // getSong and updateSong are called
         when(musicService.getSong(any(UUID.class))).thenReturn(music);
         when(musicService.updateSong(any(UUID.class), any(Music.class))).thenReturn(music);
 
         // Act
-        // updates song name
+        // update song name
         music.setSong("UpdatedSong");
-        // sends PUT request with updated music object
+        // send PUT request with updated music object
         restTemplate.put(endpoint, music);
 
         // sends get request to obtain updated music object
@@ -187,15 +191,15 @@ public class MusicControllerTest {
         Music updatedSong = response.getBody();
 
         // Assert
-        // checks that the status code is 200
+        // check that the status code is 200
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        // checks that the response id matches the Music instance id
+        // check that the response id matches the Music instance id
         assertEquals(music.getId(), updatedSong.getId());
-        // checks that the song parameter is updatedSong
+        // check that the song parameter is updatedSong
         assertEquals("UpdatedSong", updatedSong.getSong());
-        // checks that getSong was implemented
+        // check that getSong was implemented
         verify(musicService).getSong(music.getId());
-        // checks that updateSong was implemented
+        // check that updateSong was implemented
         verify(musicService).updateSong(any(UUID.class), any(Music.class));
     }
 
@@ -205,20 +209,20 @@ public class MusicControllerTest {
         // Arrange
         Music music = createNewSong();
         URI endpoint = getEndpoint(music);
-        // imitates database behaviour when song to be updated is not found,
+        // imitate database behaviour when song to be updated is not found,
         // NoSuchElementException thrown
         when(musicService.updateSong(any(UUID.class), any(Music.class)))
                 .thenThrow(NoSuchElementException.class);
 
         // Act
-        // sends PUT request with music object as body
+        // send PUT request with music object as body
         RequestEntity<Music> request = RequestEntity.put(endpoint).accept(MediaType.APPLICATION_JSON).body(music);
         ResponseEntity<Music> response = restTemplate.exchange(request, Music.class);
 
         // Assert
-        // checks that the status code is 404
+        // check that the status code is 404
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        // checks that updateSong was implemented
+        // check that updateSong was implemented
         verify(musicService).updateSong(any(UUID.class), any(Music.class));
     }
 
@@ -333,6 +337,7 @@ public class MusicControllerTest {
         verify(musicService).getLowEnergySongs();
     }
 
+    // create mock data for gethighDanceabilitySongs() test
     private List<Music> highDanceabilitySongs = new ArrayList<>() {
         {
             add(new Music("Sweet Dreams", "Beyoncé", 2008, "Pop, R&B",
@@ -346,6 +351,7 @@ public class MusicControllerTest {
         }
     };
 
+    // create mock data for getLowEnergySongs() test
     private List<Music> lowEnergySongs = new ArrayList<>() {
         {
             add(new Music("Nothing New", "Charlotte Day Wilson", 2021, "R&B, Soul",
@@ -359,6 +365,7 @@ public class MusicControllerTest {
         }
     };
 
+    // create mock data
     private Music createNewSong() {
         return setId(new Music("Sweet Dreams", "Beyoncé", 2008, "Pop, R&B",
                 "A pop-R&B track with catchy synths and Beyoncé's powerful vocals, exploring themes of love and longing.",
@@ -378,14 +385,13 @@ public class MusicControllerTest {
         return setId(defaultSongs.get(randomIndex));
     }
 
-    //
     private URI getCustomEndpoint(String endpoint) {
-        // creates endpoint with song id
+        // create endpoint with custom endpoint
         return appendPath(baseURI, endpoint);
     }
 
     private URI getEndpoint(Music music) {
-        // creates endpoint with song id
+        // create endpoint with song id
         return appendPath(baseURI, music.getId().toString());
     }
 

@@ -47,78 +47,97 @@ public class Music {
                 "A groovy Afro-jazz fusion track with rich saxophone melodies and vibrant rhythms.", 105, 250, 80, 65);
     }
 
+    // id getter
     public UUID getId() {
         return this.id;
     }
 
+    // song getter
     public String getSong() {
         return this.song;
     }
 
+    // song setter
     public void setSong(String song) {
         this.song = song;
     }
 
+    // artist getter
     public String getArtist() {
         return this.artist;
     }
 
+    // artist setter
     public void setArtist(String artist) {
         this.artist = artist;
     }
 
+    // year getter
     public Integer getYear() {
         return this.year;
     }
 
+    // year setter
     public void setYear(Integer year) {
         this.year = year;
     }
 
+    // genre getter
     public String getGenre() {
         return this.genre;
     }
 
+    // genre setter
     public void setGenre(String genre) {
         this.genre = genre;
     }
 
+    // description getter
     public String getDescription() {
         return this.description;
     }
 
+    // description setter
     public void setDescription(String description) {
         this.description = description;
     }
 
+    // duration_sec getter
     public Integer getDurationSec() {
         return this.duration_sec;
     }
 
+    // duration_sec setter
     public void setDurationSec(Integer duration_sec) {
         this.duration_sec = duration_sec;
     }
 
+    // bpm getter
     public Integer getBpm() {
         return this.bpm;
     }
 
+    // bpm setter
     public void setBpm(Integer bpm) {
         this.bpm = bpm;
     }
 
+    // energy getter
     public Integer getEnergy() {
         return this.energy;
     }
 
+    // energy setter
     public void setEnergy(Integer energy) {
         this.energy = energy;
     }
 
+    // danceability getter
     public Integer getDanceability() {
         return this.danceability;
     }
 
+    // danceability setter
     public void setDanceability(Integer danceability) {
         this.danceability = danceability;
     }

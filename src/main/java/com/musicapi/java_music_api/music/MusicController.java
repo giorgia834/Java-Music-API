@@ -31,11 +31,13 @@ public class MusicController {
         this.musicService = musicService;
     }
 
+    // get all controller
     @GetMapping
     public List<Music> getAllSongs() {
         return this.musicService.getAllSongs();
     }
 
+    // get id controller
     @GetMapping("/{id}")
     public Music getSong(@PathVariable UUID id) {
         try {
@@ -45,6 +47,7 @@ public class MusicController {
         }
     }
 
+    // create song controller
     @PostMapping
     public ResponseEntity<Music> createSong(@RequestBody Music music) {
         try {
@@ -54,6 +57,7 @@ public class MusicController {
         }
     }
 
+    // update song controller
     @PutMapping("/{id}")
     public Music updateSong(@PathVariable UUID id, @RequestBody Music music) {
         try {
@@ -63,6 +67,7 @@ public class MusicController {
         }
     }
 
+    // delete song controller
     @DeleteMapping("/{id}")
     public void deleteSong(@PathVariable UUID id) {
         try {
@@ -72,11 +77,13 @@ public class MusicController {
         }
     }
 
+    // high danceability controller
     @GetMapping("/highdanceability")
     public List<Music> getHighDanceabilitySongs() {
         return this.musicService.getHighDanceabilitySongs();
     }
 
+    // low energy controller
     @GetMapping("/lowenergy")
     public List<Music> getLowEnergySongs() {
         return this.musicService.getLowEnergySongs();
